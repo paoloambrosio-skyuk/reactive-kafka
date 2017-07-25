@@ -38,8 +38,7 @@ object KafkaConsumerActor {
     final case class Committed(offsets: Map[TopicPartition, OffsetAndMetadata])
     //internal
     private[KafkaConsumerActor] final case class Poll[K, V](
-      target: KafkaConsumerActor[K, V], periodic: Boolean
-    ) extends DeadLetterSuppression
+        target: KafkaConsumerActor[K, V], periodic: Boolean) extends DeadLetterSuppression
     private val number = new AtomicInteger()
     def nextNumber() = {
       number.incrementAndGet()
@@ -70,7 +69,7 @@ object KafkaConsumerActor {
 }
 
 private[kafka] class KafkaConsumerActor[K, V](settings: ConsumerSettings[K, V])
-    extends Actor with ActorLogging {
+  extends Actor with ActorLogging {
   import KafkaConsumerActor.Internal._
   import KafkaConsumerActor._
 

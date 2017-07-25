@@ -1,4 +1,5 @@
-import scalariform.formatter.preferences.{CompactControlReadability, DoubleIndentClassDeclaration, PreserveSpaceBeforeArguments, SpacesAroundMultiImports}
+import scalariform.formatter.preferences.{CompactControlReadability, DoubleIndentConstructorArguments, PreserveSpaceBeforeArguments, SpacesAroundMultiImports}
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import de.heikoseeberger.sbtheader.HeaderPattern
 
 name := "akka-stream-kafka"
@@ -51,7 +52,7 @@ val commonSettings =
 ),
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v"),
   ScalariformKeys.preferences := ScalariformKeys.preferences.value
-  .setPreference(DoubleIndentClassDeclaration, true)
+  .setPreference(DoubleIndentConstructorArguments, true)
   .setPreference(PreserveSpaceBeforeArguments, true)
   .setPreference(CompactControlReadability, true)
   .setPreference(SpacesAroundMultiImports, false),

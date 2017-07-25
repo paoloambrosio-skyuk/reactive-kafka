@@ -19,8 +19,7 @@ class ConfigSettingsSpec extends WordSpecLike with Matchers {
         kafka-client.bootstrap.foo = baz
         kafka-client.foo = bar
         kafka-client.client.id = client1
-        """
-      ).withFallback(ConfigFactory.load()).getConfig("kafka-client")
+        """).withFallback(ConfigFactory.load()).getConfig("kafka-client")
       val settings = ConfigSettings.parseKafkaClientsProperties(conf)
       settings("bootstrap.servers") should ===("localhost:9092")
       settings("client.id") should ===("client1")

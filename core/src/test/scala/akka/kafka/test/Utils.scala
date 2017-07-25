@@ -41,8 +41,7 @@ object Utils {
         children = probe.expectMsgType[StreamSupervisor.Children].children
         assert(
           children.isEmpty,
-          s"expected no StreamSupervisor children, but got [${children.mkString(", ")}]"
-        )
+          s"expected no StreamSupervisor children, but got [${children.mkString(", ")}]")
       }
       catch {
         case ex: Throwable ⇒

@@ -19,8 +19,7 @@ object KafkaConsumerFixtures extends PerfFixtureHelpers {
   def noopFixtureGen(c: RunTestCommand) = FixtureGen[KafkaConsumerTestFixture](
     c, msgCount => {
     KafkaConsumerTestFixture("topic", msgCount, null)
-  }
-  )
+  })
 
   def filledTopics(c: RunTestCommand) = FixtureGen[KafkaConsumerTestFixture](
     c, msgCount => {
@@ -35,6 +34,5 @@ object KafkaConsumerFixtures extends PerfFixtureHelpers {
     val consumer = new KafkaConsumer[Array[Byte], String](consumerJavaProps, new ByteArrayDeserializer, new StringDeserializer)
     consumer.subscribe(Set(topic).asJava)
     KafkaConsumerTestFixture(topic, msgCount, consumer)
-  }
-  )
+  })
 }

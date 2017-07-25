@@ -107,8 +107,7 @@ private[kafka] object ConsumerStage {
           case (groupId, offsetsMap) =>
             val committer = b.stages.getOrElse(
               groupId,
-              throw new IllegalStateException(s"Unknown committer, got [$groupId]")
-            )
+              throw new IllegalStateException(s"Unknown committer, got [$groupId]"))
             val offsets: immutable.Seq[PartitionOffset] = offsetsMap.map {
               case (ctp, offset) => PartitionOffset(ctp, offset)
             }(breakOut)
@@ -118,13 +117,12 @@ private[kafka] object ConsumerStage {
 
       case _ => throw new IllegalArgumentException(
         s"Unknow CommittableOffsetBatch, got [${batch.getClass.getName}], " +
-          s"expected [${classOf[CommittableOffsetBatchImpl].getName}]"
-      )
+          s"expected [${classOf[CommittableOffsetBatchImpl].getName}]")
     }
   }
 
   abstract class KafkaSourceStage[K, V, Msg]()
-      extends GraphStageWithMaterializedValue[SourceShape[Msg], Control] {
+    extends GraphStageWithMaterializedValue[SourceShape[Msg], Control] {
     protected val out = Outlet[Msg]("out")
     val shape = new SourceShape(out)
     protected def logic(shape: SourceShape[Msg]): GraphStageLogic with Control
@@ -147,16 +145,14 @@ private[kafka] object ConsumerStage {
         GroupTopicPartition(
           groupId = groupId,
           topic = rec.topic,
-          partition = rec.partition
-        ),
-        offset = rec.offset
-      )
+          partition = rec.partition),
+        offset = rec.offset)
       ConsumerMessage.CommittableMessage(rec, CommittableOffsetImpl(offset)(committer))
     }
   }
 
   final case class CommittableOffsetImpl(override val partitionOffset: ConsumerMessage.PartitionOffset)(val committer: Committer)
-      extends CommittableOffset {
+    extends CommittableOffset {
     override def commitScaladsl(): Future[Done] = committer.commit(immutable.Seq(partitionOffset))
     override def commitJavadsl(): CompletionStage[Done] = commitScaladsl().toJava
   }
@@ -168,7 +164,7 @@ private[kafka] object ConsumerStage {
   }
 
   final class CommittableOffsetBatchImpl(val offsets: Map[GroupTopicPartition, Long], val stages: Map[String, Committer])
-      extends CommittableOffsetBatch {
+    extends CommittableOffsetBatch {
 
     override def updated(committableOffset: CommittableOffset): CommittableOffsetBatch = {
       val partitionOffset = committableOffset.partitionOffset
@@ -180,8 +176,7 @@ private[kafka] object ConsumerStage {
         case c: CommittableOffsetImpl => c.committer
         case _ => throw new IllegalArgumentException(
           s"Unknown CommittableOffset, got [${committableOffset.getClass.getName}], " +
-            s"expected [${classOf[CommittableOffsetImpl].getName}]"
-        )
+            s"expected [${classOf[CommittableOffsetImpl].getName}]")
       }
 
       val newStages = stages.get(key.groupId) match {

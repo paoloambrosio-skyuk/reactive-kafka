@@ -25,9 +25,8 @@ object ProducerMessage {
    * that can be committed later in the flow.
    */
   final case class Message[K, V, +PassThrough](
-    record: ProducerRecord[K, V],
-    passThrough: PassThrough
-  )
+      record: ProducerRecord[K, V],
+      passThrough: PassThrough)
 
   /**
    * Output element of `Consumer#flow`. Emitted when the message has been
@@ -36,8 +35,7 @@ object ProducerMessage {
    */
   final case class Result[K, V, PassThrough](
       metadata: RecordMetadata,
-      message: Message[K, V, PassThrough]
-  ) {
+      message: Message[K, V, PassThrough]) {
     def offset = metadata.offset()
   }
 

@@ -41,7 +41,6 @@ object ReactiveKafkaProducerFixtures extends PerfFixtureHelpers {
   def noopFixtureGen(c: RunTestCommand) = FixtureGen[ReactiveKafkaConsumerTestFixture[ConsumerRecord[Array[Byte], String]]](
     c, msgCount => {
     ReactiveKafkaConsumerTestFixture("topic", msgCount, null)
-  }
-  )
+  })
 
 }

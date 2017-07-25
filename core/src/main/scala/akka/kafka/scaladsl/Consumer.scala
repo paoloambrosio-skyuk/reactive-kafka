@@ -117,7 +117,6 @@ object Consumer {
    */
   def committableExternalSource[K, V](consumer: ActorRef, subscription: ManualSubscription, groupId: String, commitTimeout: FiniteDuration): Source[CommittableMessage[K, V], Control] = {
     Source.fromGraph(ConsumerStage.externalCommittableSource[K, V](
-      consumer, groupId, commitTimeout, subscription
-    ))
+      consumer, groupId, commitTimeout, subscription))
   }
 }

@@ -80,8 +80,7 @@ object ProducerFlowExample extends ProducerExample {
         // val partition = math.abs(n) % 2
         val partition = 0
         ProducerMessage.Message(new ProducerRecord[Array[Byte], String](
-          "topic1", partition, null, n.toString
-        ), n)
+          "topic1", partition, null, n.toString), n)
       }
       .via(Producer.flow(producerSettings))
       .map { result =>

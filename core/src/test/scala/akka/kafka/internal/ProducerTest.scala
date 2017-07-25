@@ -41,16 +41,15 @@ import org.scalatest.{FlatSpecLike, Matchers}
 import org.scalatest.BeforeAndAfterAll
 
 class ProducerTest(_system: ActorSystem)
-    extends TestKit(_system) with FlatSpecLike
-    with Matchers with BeforeAndAfterAll {
+  extends TestKit(_system) with FlatSpecLike
+  with Matchers with BeforeAndAfterAll {
 
   def this() = this(ActorSystem())
 
   override def afterAll(): Unit = shutdown(system)
 
   implicit val m = ActorMaterializer(
-    ActorMaterializerSettings(_system).withFuzzing(true)
-  )
+    ActorMaterializerSettings(_system).withFuzzing(true))
   implicit val stageStoppingTimeout = StageStoppingTimeout(15.seconds)
   implicit val ec = _system.dispatcher
 

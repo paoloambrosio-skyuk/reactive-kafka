@@ -88,8 +88,7 @@ object ExternalOffsetStorageExample extends ConsumerExample {
     db.loadOffset().foreach { fromOffset =>
       val partition = 0
       val subscription = Subscriptions.assignmentWithOffset(
-        new TopicPartition("topic1", partition) -> fromOffset
-      )
+        new TopicPartition("topic1", partition) -> fromOffset)
       val done =
         Consumer.plainSource(consumerSettings, subscription)
           .mapAsync(1)(db.save)
@@ -170,8 +169,7 @@ object ConsumerToProducerSinkExample extends ConsumerExample {
         println(s"topic1 -> topic2: $msg")
         ProducerMessage.Message(new ProducerRecord[Array[Byte], String](
           "topic2",
-          msg.record.value
-        ), msg.committableOffset)
+          msg.record.value), msg.committableOffset)
       }
       .runWith(Producer.commitableSink(producerSettings))
     // #consumerToProducerSink
@@ -188,8 +186,7 @@ object ConsumerToProducerFlowExample extends ConsumerExample {
           println(s"topic1 -> topic2: $msg")
           ProducerMessage.Message(new ProducerRecord[Array[Byte], String](
             "topic2",
-            msg.record.value
-          ), msg.committableOffset)
+            msg.record.value), msg.committableOffset)
         }
         .via(Producer.flow(producerSettings))
         .mapAsync(producerSettings.parallelism) { result =>
@@ -305,8 +302,7 @@ object ConsumerWithOtherSource extends ConsumerExample {
       .batch(max = 20, {
         case (l, r) => (
           CommittableOffsetBatch.empty.updated(l.committableOffset),
-          CommittableOffsetBatch.empty.updated(r.committableOffset)
-        )
+          CommittableOffsetBatch.empty.updated(r.committableOffset))
       }) {
         case ((batchL, batchR), (l, r)) =>
           batchL.updated(l.committableOffset)
@@ -388,9 +384,7 @@ object StreamWrapperActor {
         childName = "streamActor",
         minBackoff = 3.seconds,
         maxBackoff = 30.seconds,
-        randomFactor = 0.2
-      )
-    )
+        randomFactor = 0.2))
     val supervisor = system.actorOf(supervisorProps, name = "streamActorSupervisor")
     //#errorHandlingSupervisor
     supervisor

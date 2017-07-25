@@ -16,13 +16,10 @@ object AtLeastOnceOneToManyExample extends ConsumerExample {
           List(
             ProducerMessage.Message(
               new ProducerRecord[Array[Byte], String]("topic2", msg.record.value),
-              None
-            ),
+              None),
             ProducerMessage.Message(
               new ProducerRecord[Array[Byte], String]("topic2", msg.record.value),
-              Some(msg.committableOffset)
-            )
-          ))
+              Some(msg.committableOffset))))
         .via(Producer.flow(producerSettings))
         .map(_.message.passThrough)
         .collect{ case Some(offset) => offset }

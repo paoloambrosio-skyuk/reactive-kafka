@@ -32,8 +32,8 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Matchers, WordSpecL
 import org.scalatest.Assertions
 
 class IntegrationSpec extends TestKit(ActorSystem("IntegrationSpec"))
-    with WordSpecLike with Matchers with BeforeAndAfterAll
-    with BeforeAndAfterEach with TypeCheckedTripleEquals {
+  with WordSpecLike with Matchers with BeforeAndAfterAll
+  with BeforeAndAfterEach with TypeCheckedTripleEquals {
 
   implicit val stageStoppingTimeout = StageStoppingTimeout(15.seconds)
   implicit val mat = ActorMaterializer()(system)
@@ -96,8 +96,7 @@ class IntegrationSpec extends TestKit(ActorSystem("IntegrationSpec"))
 
   def createProbe(
     consumerSettings: ConsumerSettings[Array[Byte], String],
-    topic: String
-  ): TestSubscriber.Probe[String] = {
+    topic: String): TestSubscriber.Probe[String] = {
     Consumer.plainSource(consumerSettings, TopicSubscription(Set(topic)))
       .filterNot(_.value == InitialMsg)
       .map(_.value)
@@ -246,8 +245,7 @@ class IntegrationSpec extends TestKit(ActorSystem("IntegrationSpec"))
       def consumeAndBatchCommit(topic: String) = {
         Consumer.committableSource(
           consumerSettings,
-          TopicSubscription(Set(topic))
-        )
+          TopicSubscription(Set(topic)))
           .map { msg => msg.committableOffset }
           .batch(max = 10, first => CommittableOffsetBatch.empty.updated(first)) {
             (batch, elem) => batch.updated(elem)
@@ -292,8 +290,7 @@ class IntegrationSpec extends TestKit(ActorSystem("IntegrationSpec"))
               ProducerMessage.Message(
                 // Produce to topic2
                 new ProducerRecord[Array[Byte], String](topic2, msg.record.value),
-                msg.committableOffset
-              )
+                msg.committableOffset)
             })
           .via(Producer.flow(producerSettings))
           .map(_.message.passThrough)

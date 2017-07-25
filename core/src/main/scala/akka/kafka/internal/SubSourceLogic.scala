@@ -22,8 +22,7 @@ import scala.collection.immutable
 private[kafka] abstract class SubSourceLogic[K, V, Msg](
     val shape: SourceShape[(TopicPartition, Source[Msg, NotUsed])],
     settings: ConsumerSettings[K, V],
-    subscription: AutoSubscription
-) extends GraphStageLogic(shape) with PromiseControl with MessageBuilder[K, V, Msg] {
+    subscription: AutoSubscription) extends GraphStageLogic(shape) with PromiseControl with MessageBuilder[K, V, Msg] {
   var consumer: ActorRef = _
   var self: StageActor = _
   var buffer: immutable.Queue[TopicPartition] = immutable.Queue.empty

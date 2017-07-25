@@ -26,8 +26,7 @@ object ProducerSettings {
   def apply[K, V](
     system: ActorSystem,
     keySerializer: Option[Serializer[K]],
-    valueSerializer: Option[Serializer[V]]
-  ): ProducerSettings[K, V] =
+    valueSerializer: Option[Serializer[V]]): ProducerSettings[K, V] =
     apply(system.settings.config.getConfig("akka.kafka.producer"), keySerializer, valueSerializer)
 
   /**
@@ -38,19 +37,16 @@ object ProducerSettings {
   def apply[K, V](
     config: Config,
     keySerializer: Option[Serializer[K]],
-    valueSerializer: Option[Serializer[V]]
-  ): ProducerSettings[K, V] = {
+    valueSerializer: Option[Serializer[V]]): ProducerSettings[K, V] = {
     val properties = ConfigSettings.parseKafkaClientsProperties(config.getConfig("kafka-clients"))
     require(
       keySerializer != null &&
         (keySerializer.isDefined || properties.contains(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG)),
-      "Key serializer should be defined or declared in configuration"
-    )
+      "Key serializer should be defined or declared in configuration")
     require(
       valueSerializer != null &&
         (valueSerializer.isDefined || properties.contains(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG)),
-      "Value serializer should be defined or declared in configuration"
-    )
+      "Value serializer should be defined or declared in configuration")
     val closeTimeout = config.getDuration("close-timeout", TimeUnit.MILLISECONDS).millis
     val parallelism = config.getInt("parallelism")
     val dispatcher = config.getString("use-dispatcher")
@@ -65,8 +61,7 @@ object ProducerSettings {
   def apply[K, V](
     system: ActorSystem,
     keySerializer: Serializer[K],
-    valueSerializer: Serializer[V]
-  ): ProducerSettings[K, V] =
+    valueSerializer: Serializer[V]): ProducerSettings[K, V] =
     apply(system, Option(keySerializer), Option(valueSerializer))
 
   /**
@@ -77,8 +72,7 @@ object ProducerSettings {
   def apply[K, V](
     config: Config,
     keySerializer: Serializer[K],
-    valueSerializer: Serializer[V]
-  ): ProducerSettings[K, V] = {
+    valueSerializer: Serializer[V]): ProducerSettings[K, V] = {
     apply(config, Option(keySerializer), Option(valueSerializer))
   }
 
@@ -90,8 +84,7 @@ object ProducerSettings {
   def create[K, V](
     system: ActorSystem,
     keySerializer: Optional[Serializer[K]],
-    valueSerializer: Optional[Serializer[V]]
-  ): ProducerSettings[K, V] =
+    valueSerializer: Optional[Serializer[V]]): ProducerSettings[K, V] =
     apply(system, keySerializer.asScala, valueSerializer.asScala)
 
   /**
@@ -102,8 +95,7 @@ object ProducerSettings {
   def create[K, V](
     config: Config,
     keySerializer: Optional[Serializer[K]],
-    valueSerializer: Optional[Serializer[V]]
-  ): ProducerSettings[K, V] =
+    valueSerializer: Optional[Serializer[V]]): ProducerSettings[K, V] =
     apply(config, keySerializer.asScala, valueSerializer.asScala)
 
   /**
@@ -114,8 +106,7 @@ object ProducerSettings {
   def create[K, V](
     system: ActorSystem,
     keySerializer: Serializer[K],
-    valueSerializer: Serializer[V]
-  ): ProducerSettings[K, V] =
+    valueSerializer: Serializer[V]): ProducerSettings[K, V] =
     apply(system, keySerializer, valueSerializer)
 
   /**
@@ -126,8 +117,7 @@ object ProducerSettings {
   def create[K, V](
     config: Config,
     keySerializer: Serializer[K],
-    valueSerializer: Serializer[V]
-  ): ProducerSettings[K, V] =
+    valueSerializer: Serializer[V]): ProducerSettings[K, V] =
     apply(config, keySerializer, valueSerializer)
 
 }
@@ -144,8 +134,7 @@ final class ProducerSettings[K, V](
     val valueSerializerOpt: Option[Serializer[V]],
     val closeTimeout: FiniteDuration,
     val parallelism: Int,
-    val dispatcher: String
-) {
+    val dispatcher: String) {
 
   def withBootstrapServers(bootstrapServers: String): ProducerSettings[K, V] =
     withProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
@@ -172,8 +161,7 @@ final class ProducerSettings[K, V](
     valueSerializer: Option[Serializer[V]] = valueSerializerOpt,
     closeTimeout: FiniteDuration = closeTimeout,
     parallelism: Int = parallelism,
-    dispatcher: String = dispatcher
-  ): ProducerSettings[K, V] =
+    dispatcher: String = dispatcher): ProducerSettings[K, V] =
     new ProducerSettings[K, V](properties, keySerializer, valueSerializer, closeTimeout, parallelism, dispatcher)
 
   /**

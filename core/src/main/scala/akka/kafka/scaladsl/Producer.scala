@@ -36,8 +36,7 @@ object Producer {
    */
   def plainSink[K, V](
     settings: ProducerSettings[K, V],
-    producer: KafkaProducer[K, V]
-  ): Sink[ProducerRecord[K, V], Future[Done]] =
+    producer: KafkaProducer[K, V]): Sink[ProducerRecord[K, V], Future[Done]] =
     Flow[ProducerRecord[K, V]].map(Message(_, NotUsed))
       .via(flow(settings, producer))
       .toMat(Sink.ignore)(Keep.right)
@@ -65,8 +64,7 @@ object Producer {
    */
   def commitableSink[K, V](
     settings: ProducerSettings[K, V],
-    producer: KafkaProducer[K, V]
-  ): Sink[Message[K, V, ConsumerMessage.Committable], Future[Done]] =
+    producer: KafkaProducer[K, V]): Sink[Message[K, V, ConsumerMessage.Committable], Future[Done]] =
     flow[K, V, ConsumerMessage.Committable](settings, producer)
       .mapAsync(settings.parallelism)(_.message.passThrough.commitScaladsl())
       .toMat(Sink.ignore)(Keep.right)
@@ -80,8 +78,7 @@ object Producer {
     val flow = Flow.fromGraph(new ProducerStage[K, V, PassThrough](
       settings.closeTimeout,
       closeProducerOnStop = true,
-      () => settings.createKafkaProducer()
-    )).mapAsync(settings.parallelism)(identity)
+      () => settings.createKafkaProducer())).mapAsync(settings.parallelism)(identity)
 
     if (settings.dispatcher.isEmpty) flow
     else flow.withAttributes(ActorAttributes.dispatcher(settings.dispatcher))
@@ -94,13 +91,11 @@ object Producer {
    */
   def flow[K, V, PassThrough](
     settings: ProducerSettings[K, V],
-    producer: KafkaProducer[K, V]
-  ): Flow[Message[K, V, PassThrough], Result[K, V, PassThrough], NotUsed] = {
+    producer: KafkaProducer[K, V]): Flow[Message[K, V, PassThrough], Result[K, V, PassThrough], NotUsed] = {
     val flow = Flow.fromGraph(new ProducerStage[K, V, PassThrough](
       closeTimeout = settings.closeTimeout,
       closeProducerOnStop = false,
-      producerProvider = () => producer
-    )).mapAsync(settings.parallelism)(identity)
+      producerProvider = () => producer)).mapAsync(settings.parallelism)(identity)
 
     if (settings.dispatcher.isEmpty) flow
     else flow.withAttributes(ActorAttributes.dispatcher(settings.dispatcher))

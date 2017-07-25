@@ -102,8 +102,7 @@ object ConsumerSettings {
   def apply[K, V](
     system: ActorSystem,
     keyDeserializer: Option[Deserializer[K]],
-    valueDeserializer: Option[Deserializer[V]]
-  ): ConsumerSettings[K, V] = {
+    valueDeserializer: Option[Deserializer[V]]): ConsumerSettings[K, V] = {
     val config = system.settings.config.getConfig("akka.kafka.consumer")
     apply(config, keyDeserializer, valueDeserializer)
   }
@@ -116,19 +115,16 @@ object ConsumerSettings {
   def apply[K, V](
     config: Config,
     keyDeserializer: Option[Deserializer[K]],
-    valueDeserializer: Option[Deserializer[V]]
-  ): ConsumerSettings[K, V] = {
+    valueDeserializer: Option[Deserializer[V]]): ConsumerSettings[K, V] = {
     val properties = ConfigSettings.parseKafkaClientsProperties(config.getConfig("kafka-clients"))
     require(
       keyDeserializer != null &&
         (keyDeserializer.isDefined || properties.contains(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG)),
-      "Key deserializer should be defined or declared in configuration"
-    )
+      "Key deserializer should be defined or declared in configuration")
     require(
       valueDeserializer != null &&
         (valueDeserializer.isDefined || properties.contains(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG)),
-      "Value deserializer should be defined or declared in configuration"
-    )
+      "Value deserializer should be defined or declared in configuration")
     val pollInterval = config.getDuration("poll-interval", TimeUnit.MILLISECONDS).millis
     val pollTimeout = config.getDuration("poll-timeout", TimeUnit.MILLISECONDS).millis
     val stopTimeout = config.getDuration("stop-timeout", TimeUnit.MILLISECONDS).millis
@@ -149,8 +145,7 @@ object ConsumerSettings {
   def apply[K, V](
     system: ActorSystem,
     keyDeserializer: Deserializer[K],
-    valueDeserializer: Deserializer[V]
-  ): ConsumerSettings[K, V] = {
+    valueDeserializer: Deserializer[V]): ConsumerSettings[K, V] = {
     apply(system, Option(keyDeserializer), Option(valueDeserializer))
   }
 
@@ -162,8 +157,7 @@ object ConsumerSettings {
   def apply[K, V](
     config: Config,
     keyDeserializer: Deserializer[K],
-    valueDeserializer: Deserializer[V]
-  ): ConsumerSettings[K, V] = {
+    valueDeserializer: Deserializer[V]): ConsumerSettings[K, V] = {
     apply(config, Option(keyDeserializer), Option(valueDeserializer))
   }
 
@@ -175,8 +169,7 @@ object ConsumerSettings {
   def create[K, V](
     system: ActorSystem,
     keyDeserializer: Optional[Deserializer[K]],
-    valueDeserializer: Optional[Deserializer[V]]
-  ): ConsumerSettings[K, V] =
+    valueDeserializer: Optional[Deserializer[V]]): ConsumerSettings[K, V] =
     apply(system, keyDeserializer.asScala, valueDeserializer.asScala)
 
   /**
@@ -187,8 +180,7 @@ object ConsumerSettings {
   def create[K, V](
     config: Config,
     keyDeserializer: Optional[Deserializer[K]],
-    valueDeserializer: Optional[Deserializer[V]]
-  ): ConsumerSettings[K, V] =
+    valueDeserializer: Optional[Deserializer[V]]): ConsumerSettings[K, V] =
     apply(config, keyDeserializer.asScala, valueDeserializer.asScala)
 
   /**
@@ -199,8 +191,7 @@ object ConsumerSettings {
   def create[K, V](
     system: ActorSystem,
     keyDeserializer: Deserializer[K],
-    valueDeserializer: Deserializer[V]
-  ): ConsumerSettings[K, V] =
+    valueDeserializer: Deserializer[V]): ConsumerSettings[K, V] =
     apply(system, keyDeserializer, valueDeserializer)
 
   /**
@@ -211,8 +202,7 @@ object ConsumerSettings {
   def create[K, V](
     config: Config,
     keyDeserializer: Deserializer[K],
-    valueDeserializer: Deserializer[V]
-  ): ConsumerSettings[K, V] =
+    valueDeserializer: Deserializer[V]): ConsumerSettings[K, V] =
     apply(config, keyDeserializer, valueDeserializer)
 }
 
@@ -233,8 +223,7 @@ class ConsumerSettings[K, V](
     val commitTimeout: FiniteDuration,
     val wakeupTimeout: FiniteDuration,
     val maxWakeups: Int,
-    val dispatcher: String
-) {
+    val dispatcher: String) {
 
   def withBootstrapServers(bootstrapServers: String): ConsumerSettings[K, V] =
     withProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
@@ -292,8 +281,7 @@ class ConsumerSettings[K, V](
     commitTimeout: FiniteDuration = commitTimeout,
     wakeupTimeout: FiniteDuration = wakeupTimeout,
     maxWakeups: Int = maxWakeups,
-    dispatcher: String = dispatcher
-  ): ConsumerSettings[K, V] =
+    dispatcher: String = dispatcher): ConsumerSettings[K, V] =
     new ConsumerSettings[K, V](properties, keyDeserializer, valueDeserializer,
       pollInterval, pollTimeout, stopTimeout, closeTimeout, commitTimeout, wakeupTimeout,
       maxWakeups, dispatcher)

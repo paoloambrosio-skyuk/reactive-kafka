@@ -23,9 +23,8 @@ object ConsumerMessage {
    * The offset can be committed via the included [[CommittableOffset]].
    */
   final case class CommittableMessage[K, V](
-    record: ConsumerRecord[K, V],
-    committableOffset: CommittableOffset
-  )
+      record: ConsumerRecord[K, V],
+      committableOffset: CommittableOffset)
 
   /**
    * Commit an offset that is included in a [[CommittableMessage]].
@@ -67,10 +66,9 @@ object ConsumerMessage {
    * groupId, topic, partition key for an offset position.
    */
   final case class GroupTopicPartition(
-    groupId: String,
-    topic: String,
-    partition: Int
-  )
+      groupId: String,
+      topic: String,
+      partition: Int)
 
   object CommittableOffsetBatch {
     val empty: CommittableOffsetBatch = new CommittableOffsetBatchImpl(Map.empty, Map.empty)
