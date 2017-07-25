@@ -28,7 +28,7 @@ import org.apache.kafka.clients.producer.{
   RecordMetadata
 }
 import org.apache.kafka.common.TopicPartition
-import org.apache.kafka.common.record.Record
+import org.apache.kafka.common.record.RecordBatch
 import org.apache.kafka.common.serialization.StringSerializer
 
 import org.mockito.Matchers._
@@ -61,7 +61,7 @@ class ProducerTest(_system: ActorSystem)
 
   def recordAndMetadata(seed: Int) = {
     new ProducerRecord("test", seed.toString, seed.toString) ->
-      new RecordMetadata(new TopicPartition("test", seed), seed.toLong, seed.toLong, Record.NO_TIMESTAMP, -1, -1, -1)
+      new RecordMetadata(new TopicPartition("test", seed), seed.toLong, seed.toLong, RecordBatch.NO_TIMESTAMP, -1, -1, -1)
   }
 
   def toMessage(tuple: (Record, RecordMetadata)) = Message(tuple._1, NotUsed)
